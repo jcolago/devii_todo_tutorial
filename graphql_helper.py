@@ -126,3 +126,50 @@ def edit_item(itemid, new_name, list_id, status_id):
         "i": {"itemname": new_name, "listid": int(list_id), "statusid": int(status_id)}
     }
     return execute_graphql_query(edit_item_mutation, variables)
+
+# Edit functions will have same format as edit_item
+def edit_list(listid, new_list_name, status_id):
+    edit_list_mutation = """
+    mutation($i: listInput, $j: ID!){
+        update_list(input: $i, listid: $j){
+            listid
+            listname
+            status_value {
+                statusname
+                statusid
+            }
+        }
+    }
+    """
+
+    variables = {"j": int(listid), "i": {"listname": new_list_name, "statusid": int(status_id)}}
+    return execute_graphql_query(edit_list_mutation, variables)
+
+# Deleted objects reqires the primary key of object to be deleted
+def delete_item(itemid):
+    delete_item_mutation = """
+    mutation($i :ID!){
+        delete_item(itemid: $i){
+            itemid
+            itemname
+        }
+    }
+    """
+
+    variables = {"i": int(itemid)}
+    return execute_graphql_query(delete_item_mutation, variables)
+
+# Delete list has same format as delete_item
+
+def delete_list(listid):
+    delete_list_mutation = """
+    mutation($i: ID!){
+        delete_list(listid: $i){
+            listid
+            listname
+        }
+    }
+    """
+
+    variables = {"i": int(listid)}
+    return execute_graphql_query(delete_list_mutation, variables)
