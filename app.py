@@ -36,3 +36,76 @@ def add_item():
         return redirect(url_for("index"))
     else:
         return "Error adding item"
+
+@app.route("/add_list", methods=["POST"])
+def add_list():
+    list_name = request.form["listname"]
+    status_id = request.form["statusid"]
+
+    response = graphql_helper.add_list(list_name, status_id)
+
+    if response.get("data"):
+        return redirect(url_for("index"))
+    else:
+        return "Error adding catagory"
+    
+@app.route("/delete_item", methods=["POST"])
+def delete_item():
+    itemid = request.form["itemid"]
+
+    response = graphql_helper.delete_item(itemid)
+
+    if response.get("data"):
+        return redirect(url_for("index"))
+    else:
+        return "Error deleteding item"
+    
+@app.route("/edit_item", methods=["POST"])
+def edit_item():  # rename edit_item
+    item_id = request.form["itemid"]
+    item_name = request.form["itemname"]
+    list_id = request.form["listid"]
+    status_id = request.form["statusid"]
+
+    response = graphql_helper.edit_item(item_id, item_name, list_id, status_id)
+
+    if response.get("data"):
+        return redirect(url_for("index"))
+    else:
+        return "Error editing item."
+
+
+@app.route("/edit_list", methods=["POST"])
+def edit_list():
+    listid = request.form["listid"]
+    new_list_name = request.form["listname"]
+    statusid = request.form["statusid"]
+
+    response = graphql_helper.edit_list(listid, new_list_name, statusid)
+
+    if response.get("data"):
+        return redirect(url_for("index"))
+    else:
+        return "Error editing catagory."
+
+
+@app.route("/delete_list", methods=["POST"])
+def delete_list():
+    list_id = request.form["listid"]
+
+    response = graphql_helper.delete_list(list_id)
+
+    if response.get("data"):
+        return redirect(url_for("index"))
+    else:
+        return "Error editing catagory."
+
+@app.route("/get_status", methods=["GET", "POST"])
+def get_status():
+    status_data = graphql_helper.get_status_name()
+
+    return status_data
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
