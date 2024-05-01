@@ -34,8 +34,9 @@ def get_access_token():
         print("Error:", response.status_code)
         print(response.text)
 
-        access_token = get_access_token()
-        headers = {
+access_token = get_access_token()
+
+headers = {
     "Authorization": f"Bearer {access_token}",
     "Content-Type": "application/json",
 }
