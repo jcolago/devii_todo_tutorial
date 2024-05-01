@@ -84,4 +84,45 @@ def add_item(item_name, list_id, status_id):
 
     # GraphQL mutation 
     return execute_graphql_query(add_item_mutation, variables)
-  
+
+# Functions from here on have the same format as add_item
+
+def add_list(listname, status_id):
+    add_list_mutation = """
+        mutation($i: listInput){
+            create_list(input:$i){
+                listid
+                listname
+                status_value{
+                    statusid
+                    statusname
+                }
+            }
+        }
+    """
+    variables = {"i": {"listname": listname, "statusid":int(status_id)}}
+    return execute_graphql_query(add_list_mutation, variables)
+
+# Editing items requires identifying the Primay Key of the item you want to edit, PK is the itemid that will be variable $j, $i will be the changes to the item
+def edit_item(itemid, new_name, list_id, status_id):
+    edit_item_mutation = """
+        mutation ($i: itemInput, $j: ID!) {
+            update_item(input: $i, itemid: $j) {
+                itemid
+                itemname
+                status_value{
+                    statusid
+                    statusname
+                }
+                list {
+                    listid
+                    listname
+                }
+            }
+        }
+        """
+    variables = {
+        "j": itemid, # Primary Key for items
+        "i": {"itemname": new_name, "listid": int(list_id), "statusid": int(status_id)}
+    }
+    return execute_graphql_query(edit_item_mutation, variables)
